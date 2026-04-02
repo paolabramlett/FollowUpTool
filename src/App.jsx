@@ -13,6 +13,20 @@ const TABS = [
   { id: 'create', label: '+ New Proposal' },
 ];
 
+const SYNC_LABELS = {
+  idle:    null,
+  loading: { text: 'Syncing…',  cls: 'sync-loading' },
+  synced:  { text: 'Synced',    cls: 'sync-ok' },
+  offline: { text: 'Offline',   cls: 'sync-offline' },
+  error:   { text: 'Sync error', cls: 'sync-error' },
+};
+
+function SyncBadge({ status }) {
+  const info = SYNC_LABELS[status];
+  if (!info) return null;
+  return <span className={`sync-badge ${info.cls}`}>{info.text}</span>;
+}
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('active');
   const store = useProposals();
@@ -25,8 +39,11 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Proposal Tracker</h1>
-        <p className="app-subtitle">Follow up. Win more.</p>
+        <div>
+          <h1>Proposal Tracker</h1>
+          <p className="app-subtitle">Follow up. Win more.</p>
+        </div>
+        <SyncBadge status={store.syncStatus} />
       </header>
 
       <nav className="tab-nav">
